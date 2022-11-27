@@ -45,3 +45,29 @@ export const createPeriod = async (period: Period) => {
     endDate: end,
   })
 }
+export const getUser = async (userId: string) => {
+  const q = query(userRef, where('uid', '==', userId));
+  const snapshot = await getDocs(q);
+  const user = snapshot.docs[0];
+  if (user && user.exists()) {
+    const { uid: id, ...rest } = user.data();
+    const returnUser = {
+      id,
+      ...rest,
+    } as User;
+    return returnUser;
+  }
+  return null;
+};
+export async function getAllUsers() {
+  const snapshot = await getDocs(userRef);
+  const users: User[] = [];
+  snapshot.forEach((doc) => {
+    const { uid: id, ...rest } = doc.data();
+    users.push({
+      id,
+      ...rest,
+    } as User);
+  });
+  return users;
+}
