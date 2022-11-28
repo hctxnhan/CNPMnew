@@ -15,3 +15,17 @@ export function signInUser(email: string, password: string) {
 export function signOutUser() {
   signOut(auth);
 }
+
+export function onAuthChangeState(callback: (user: User | null) => void) {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const { uid } = user;
+      getUser(uid).then((user) => {
+        callback(user);
+      });
+    } else {
+      callback(null);
+    }
+  });
+  return unsubscribe;
+}

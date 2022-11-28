@@ -96,3 +96,18 @@ export async function getPeriods(): Promise<Period[]> {
 
   return result;
 }
+export const onUserDataChange = (
+  userId: string,
+  callback: (user: User) => void
+) => {
+  const q = query(userRef, where('uid', '==', userId));
+  const unsubscribe = onSnapshot(q, () => {
+    console.log('user data changed');
+    getUser(userId).then((user) => {
+      if (user) {
+        callback(user);
+      }
+    });
+  });
+  return unsubscribe;
+};
