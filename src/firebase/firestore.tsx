@@ -111,3 +111,30 @@ export const onUserDataChange = (
   });
   return unsubscribe;
 };
+
+export const addStudentToTopic = async (
+  periodId: string,
+  topicId: string,
+  studentId: string
+) => {
+
+  //start a batch write
+  const batch = writeBatch(db);
+  const topicRef = doc(periodRef, periodId, 'topics', topicId);
+  const topic = await getTopic(topicRef);
+  if (topic) {
+    const { members } = topic;
+    batch.update(topicRef, {
+      members: [...members, studentId],
+    });
+    // remove student from applied list
+    const q = query(userRef, where('uid', '==', studentId));
+    const snapshot = await getDocs(q);
+    const studentRef = snapshot.docs[0].ref;
+    batch.update(studentRef, {
+      appliedTopics: [],
+    });
+    // commit the batch
+    batch.commit();
+  }
+};
