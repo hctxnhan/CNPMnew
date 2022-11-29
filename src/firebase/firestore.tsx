@@ -156,3 +156,11 @@ export async function onStudentListAppliedToTopicChange(
   })
   return unsubscribe
 }
+
+export function createUserAdditionalData(user: User) {
+  // TODO
+  const userDocRef = doc(userRef);
+  setDoc(userDocRef, {
+    ...user,
+  });
+}
