@@ -46,37 +46,37 @@ export const createPeriod = async (period: Period) => {
   })
 }
 export const getUser = async (userId: string) => {
-  const q = query(userRef, where('uid', '==', userId));
-  const snapshot = await getDocs(q);
-  const user = snapshot.docs[0];
+  const q = query(userRef, where('uid', '==', userId))
+  const snapshot = await getDocs(q)
+  const user = snapshot.docs[0]
   if (user && user.exists()) {
-    const { uid: id, ...rest } = user.data();
+    const { uid: id, ...rest } = user.data()
     const returnUser = {
       id,
       ...rest,
-    } as User;
-    return returnUser;
+    } as User
+    return returnUser
   }
-  return null;
-};
+  return null
+}
 export async function getAllUsers() {
-  const snapshot = await getDocs(userRef);
-  const users: User[] = [];
+  const snapshot = await getDocs(userRef)
+  const users: User[] = []
   snapshot.forEach((doc) => {
-    const { uid: id, ...rest } = doc.data();
+    const { uid: id, ...rest } = doc.data()
     users.push({
       id,
       ...rest,
-    } as User);
-  });
-  return users;
+    } as User)
+  })
+  return users
 }
 export async function getPeriods(): Promise<Period[]> {
-  const periods = await getDocs(periodRef);
+  const periods = await getDocs(periodRef)
 
   const result = Promise.all(
     periods.docs.map(async (period) => {
-      const topics = await getDocs(collection(periodRef, period.id, 'topics'));
+      const topics = await getDocs(collection(periodRef, period.id, 'topics'))
       return {
         id: period.id,
         ...period.data(),
@@ -86,55 +86,73 @@ export async function getPeriods(): Promise<Period[]> {
           return {
             id: topic.id,
             ...topic.data(),
-          } as Topic;
+          } as Topic
         }),
-      } as Period;
+      } as Period
     })
   ).then((fullData) => {
-    return fullData;
-  });
+    return fullData
+  })
 
-  return result;
+  return result
 }
 export const onUserDataChange = (
   userId: string,
   callback: (user: User) => void
 ) => {
-  const q = query(userRef, where('uid', '==', userId));
+  const q = query(userRef, where('uid', '==', userId))
   const unsubscribe = onSnapshot(q, () => {
-    console.log('user data changed');
+    console.log('user data changed')
     getUser(userId).then((user) => {
       if (user) {
-        callback(user);
+        callback(user)
       }
-    });
-  });
-  return unsubscribe;
-};
+    })
+  })
+  return unsubscribe
+}
 
 export const addStudentToTopic = async (
   periodId: string,
   topicId: string,
   studentId: string
 ) => {
-
   //start a batch write
-  const batch = writeBatch(db);
-  const topicRef = doc(periodRef, periodId, 'topics', topicId);
-  const topic = await getTopic(topicRef);
+  const batch = writeBatch(db)
+  const topicRef = doc(periodRef, periodId, 'topics', topicId)
+  const topic = await getTopic(topicRef)
   if (topic) {
-    const { members } = topic;
+    const { members } = topic
     batch.update(topicRef, {
       members: [...members, studentId],
-    });
+    })
     // remove student from applied list
-    const q = query(userRef, where('uid', '==', studentId));
-    const snapshot = await getDocs(q);
-    const studentRef = snapshot.docs[0].ref;
+    const q = query(userRef, where('uid', '==', studentId))
+    const snapshot = await getDocs(q)
+    const studentRef = snapshot.docs[0].ref
     batch.update(studentRef, {
       appliedTopics: [],
-    });
+    })
     // commit the batch
-    batch.commit();
+    batch.commit()
   }
-};
+}
+
+export const onPeriodsChange = (callback: () => void) => {
+  const q = query(collectionGroup(db, 'topics'))
+  const unsubscribe = onSnapshot(q, callback)
+  return unsubscribe
+}
+
+export async function onStudentListAppliedToTopicChange(
+  topicId: string,
+  callback: (students: Student[]) => void
+) {
+  const q = query(userRef, where('appliedTopics', 'array-contains', topicId))
+  const unsubscribe = onSnapshot(q, () => {
+    getStudentListAppliedToTopic(topicId).then((students) => {
+      callback(students)
+    })
+  })
+  return unsubscribe
+}
