@@ -156,3 +156,61 @@ export async function onStudentListAppliedToTopicChange(
   })
   return unsubscribe
 }
+
+//* Day 4 Loc
+export const addTopicToAppliedTopics = async (
+  studentId: string,
+  topicId: string
+) => {
+  const q = query(userRef, where('uid', '==', studentId));
+  const snapshot = await getDocs(q);
+  const studentRef = snapshot.docs[0].ref;
+
+  const student = (await getUser(studentId)) as Student;
+
+  const { appliedTopics } = student;
+  updateDoc(studentRef, {
+    appliedTopics: [...appliedTopics, topicId],
+  });
+};
+
+// * DAy 4 Loc
+export const checkIfStudentJoinedAnyTopic = (
+  studentId: string,
+  callback: (topicId: string | null) => void
+) => {
+  const q = query(topicRef, where('members', 'array-contains', studentId));
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    if (snapshot.docs.length > 0) {
+      const topicId = snapshot.docs[0].id;
+      console.log('student joined topic', topicId);
+      callback(topicId);
+    } else {
+      console.log('student not joined any topic');
+      callback(null);
+    }
+  });
+
+  return unsubscribe;
+};
+
+export function createUser(user: User) {
+  const { id, ...rest } = user;
+  const docRef = doc(userRef);
+  return setDoc(docRef, rest);
+}
+
+export async function createPeriod(period: Period) {
+  const { id, topics, ...rest } = period;
+
+  const docRef = doc(periodRef);
+
+  const topicsRef = collection(docRef, 'topics');
+
+  await setDoc(docRef, rest);
+  topics.forEach((topic) => {
+    const { id, ...rest } = topic;
+    const docRef = doc(topicsRef);
+    setDoc(docRef, rest);
+  });
+}
