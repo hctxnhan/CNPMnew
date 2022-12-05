@@ -235,3 +235,8 @@ export const setEvaluationMembers = async (
     console.log("topic does not exist", periodId, topicId);
   }
 };
+export const createTopic = async (periodId: string, topic: Topic) => {
+  const topicRef = doc(collection(periodRef, periodId, 'topics'))
+  const { id, ...rest } = topic
+  setDoc(topicRef, rest)
+}
