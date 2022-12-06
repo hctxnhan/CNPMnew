@@ -235,3 +235,23 @@ export const setEvaluationMembers = async (
     console.log("topic does not exist", periodId, topicId);
   }
 };
+export const createTopic = async (periodId: string, topic: Topic) => {
+  const topicRef = doc(collection(periodRef, periodId, 'topics'))
+  const { id, ...rest } = topic
+  setDoc(topicRef, rest)
+}
+
+export const removeStudentFromTopic = async (
+  periodId: string,
+  topicId: string,
+  studentId: string
+) => {
+  const topicRef = doc(periodRef, periodId, 'topics', topicId)
+  const topic = await getTopic(topicRef)
+  if (topic) {
+    const { members } = topic
+    updateDoc(topicRef, {
+      queue: members.filter((member) => member !== studentId),
+    })
+  }
+}

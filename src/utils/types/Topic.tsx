@@ -14,3 +14,4 @@ type Topic = {
 };
 
 export default Topic;
+
