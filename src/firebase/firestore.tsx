@@ -255,3 +255,29 @@ export const removeStudentFromTopic = async (
     })
   }
 }
+// * Day 2 Loc
+export async function getPeriods(): Promise<Period[]> {
+  const periods = await getDocs(periodRef);
+
+  const result = Promise.all(
+    periods.docs.map(async (period) => {
+      const topics = await getDocs(collection(periodRef, period.id, 'topics'));
+      return {
+        id: period.id,
+        ...period.data(),
+        startDate: period.data().startDate.seconds,
+        endDate: period.data().endDate.seconds,
+        topics: topics.docs.map((topic) => {
+          return {
+            id: topic.id,
+            ...topic.data(),
+          } as Topic;
+        }),
+      } as Period;
+    })
+  ).then((fullData) => {
+    return fullData;
+  });
+
+  return result;
+}
