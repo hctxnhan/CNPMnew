@@ -297,3 +297,26 @@ export async function getStudentListAppliedToTopic(topicId: string) {
   console.log("students", students);
   return students;
 }
+// * Sprint 2 Day 4 Loc
+export const addBookmarks = async (
+  studentId: string,
+  periodId: string,
+  topicId: string
+) => {
+  //updatedoc student bookmarks map
+  const q = query(userRef, where('uid', '==', studentId))
+  const snapshot = await getDocs(q)
+  const studentRef = snapshot.docs[0].ref
+  const student = snapshot.docs[0].data()
+  const bookmarks = student.bookmarkedTopics || {}
+
+  if (bookmarks[periodId] === undefined) {
+    bookmarks[periodId] = []
+  }
+  if (!bookmarks[periodId].includes(topicId)) {
+    bookmarks[periodId].push(topicId)
+    console.log(bookmarks)
+    // bookmarks[periodId] = [...bookmarks[periodId], topicId];
+    updateDoc(studentRef, { bookmarkedTopics: bookmarks })
+  }
+}
