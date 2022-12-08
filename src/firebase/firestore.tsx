@@ -320,3 +320,8 @@ export const addBookmarks = async (
     updateDoc(studentRef, { bookmarkedTopics: bookmarks })
   }
 }
+export const removeTopic = async (periodId: string, topicId: string) => {
+  const topicRef = doc(periodRef, periodId, 'topics', topicId)
+  const batch = writeBatch(db)
+  deleteDoc(topicRef)
+}
