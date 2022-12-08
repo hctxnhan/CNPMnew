@@ -236,32 +236,32 @@ export const setEvaluationMembers = async (
   }
 };
 export const createTopic = async (periodId: string, topic: Topic) => {
-  const topicRef = doc(collection(periodRef, periodId, 'topics'))
-  const { id, ...rest } = topic
-  setDoc(topicRef, rest)
-}
+  const topicRef = doc(collection(periodRef, periodId, "topics"));
+  const { id, ...rest } = topic;
+  setDoc(topicRef, rest);
+};
 
 export const removeStudentFromTopic = async (
   periodId: string,
   topicId: string,
   studentId: string
 ) => {
-  const topicRef = doc(periodRef, periodId, 'topics', topicId)
-  const topic = await getTopic(topicRef)
+  const topicRef = doc(periodRef, periodId, "topics", topicId);
+  const topic = await getTopic(topicRef);
   if (topic) {
-    const { members } = topic
+    const { members } = topic;
     updateDoc(topicRef, {
       queue: members.filter((member) => member !== studentId),
-    })
+    });
   }
-}
+};
 // * Day 2 Loc
 export async function getPeriods(): Promise<Period[]> {
   const periods = await getDocs(periodRef);
 
   const result = Promise.all(
     periods.docs.map(async (period) => {
-      const topics = await getDocs(collection(periodRef, period.id, 'topics'));
+      const topics = await getDocs(collection(periodRef, period.id, "topics"));
       return {
         id: period.id,
         ...period.data(),
@@ -280,4 +280,20 @@ export async function getPeriods(): Promise<Period[]> {
   });
 
   return result;
+}
+
+export async function getStudentListAppliedToTopic(topicId: string) {
+  console.log(topicId);
+  const q = query(userRef, where("appliedTopics", "array-contains", topicId));
+  const snapshot = await getDocs(q);
+  const students: Student[] = [];
+  snapshot.forEach((doc) => {
+    const { uid: id, ...rest } = doc.data();
+    students.push({
+      id,
+      ...rest,
+    } as Student);
+  });
+  console.log("students", students);
+  return students;
 }
