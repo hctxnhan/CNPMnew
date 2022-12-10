@@ -325,3 +325,22 @@ export const removeTopic = async (periodId: string, topicId: string) => {
   const batch = writeBatch(db)
   deleteDoc(topicRef)
 }
+
+// * sprint 2 - Loc day 6
+export const removeBookmarks = async (
+  studentId: string,
+  periodId: string,
+  topicId: string
+) => {
+  //updatedoc student bookmarks map
+  const q = query(userRef, where('uid', '==', studentId))
+  const snapshot = await getDocs(q)
+  const studentRef = snapshot.docs[0].ref
+  const student = snapshot.docs[0].data()
+  const bookmarks = student.bookmarkedTopics
+  bookmarks[periodId] = bookmarks[periodId].filter(
+    (id: string) => id !== topicId
+  )
+  console.log(bookmarks)
+  updateDoc(studentRef, { bookmarkedTopics: bookmarks })
+}
