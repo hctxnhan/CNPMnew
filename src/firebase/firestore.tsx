@@ -1,4 +1,4 @@
-import { db } from './firebase';
+import { db } from "./firebase";
 import {
   collection,
   deleteDoc,
@@ -16,17 +16,17 @@ import {
   DocumentReference,
   Timestamp,
   writeBatch,
-} from 'firebase/firestore';
-import { Educator, Student, User } from '../utils/types/User';
-import Period from '../utils/types/RegistrationPeriod';
-import Topic from '../utils/types/Topic';
+} from "firebase/firestore";
+import { Educator, Student, User } from "../utils/types/User";
+import Period from "../utils/types/RegistrationPeriod";
+import Topic from "../utils/types/Topic";
 
-const userRef = collection(db, 'users');
-const periodRef = collection(db, 'periods');
-const topicRef = collectionGroup(db, 'topics');
+const userRef = collection(db, "users");
+const periodRef = collection(db, "periods");
+const topicRef = collectionGroup(db, "topics");
 
 export async function getEducators() {
-  const q = query(userRef, where('role', '==', 'educator'));
+  const q = query(userRef, where("role", "==", "educator"));
   const snapshot = await getDocs(q);
   const educators: Educator[] = [];
   snapshot.forEach((doc) => {
@@ -44,7 +44,7 @@ export async function getPeriods(): Promise<Period[]> {
 
   const result = Promise.all(
     periods.docs.map(async (period) => {
-      const topics = await getDocs(collection(periodRef, period.id, 'topics'));
+      const topics = await getDocs(collection(periodRef, period.id, "topics"));
       return {
         id: period.id,
         ...period.data(),
@@ -69,9 +69,9 @@ export const onUserDataChange = (
   userId: string,
   callback: (user: User) => void
 ) => {
-  const q = query(userRef, where('uid', '==', userId));
+  const q = query(userRef, where("uid", "==", userId));
   const unsubscribe = onSnapshot(q, () => {
-    console.log('user data changed');
+    console.log("user data changed");
     getUser(userId).then((user) => {
       if (user) {
         callback(user);
@@ -82,7 +82,7 @@ export const onUserDataChange = (
 };
 
 export const onPeriodsChange = (callback: () => void) => {
-  const q = query(collectionGroup(db, 'topics'));
+  const q = query(collectionGroup(db, "topics"));
   const unsubscribe = onSnapshot(q, callback);
   return unsubscribe;
 };
@@ -98,13 +98,13 @@ export const onSnapshotChange = (
 };
 
 export const createTopic = async (periodId: string, topic: Topic) => {
-  const topicRef = doc(collection(periodRef, periodId, 'topics'));
+  const topicRef = doc(collection(periodRef, periodId, "topics"));
   const { id, ...rest } = topic;
   setDoc(topicRef, rest);
 };
 
 export const removeTopic = async (periodId: string, topicId: string) => {
-  const topicRef = doc(periodRef, periodId, 'topics', topicId);
+  const topicRef = doc(periodRef, periodId, "topics", topicId);
   const batch = writeBatch(db);
 
   deleteDoc(topicRef);
@@ -145,7 +145,7 @@ export const addStudentToTopic = async (
 
   //start a batch write
   const batch = writeBatch(db);
-  const topicRef = doc(periodRef, periodId, 'topics', topicId);
+  const topicRef = doc(periodRef, periodId, "topics", topicId);
   const topic = await getTopic(topicRef);
   if (topic) {
     const { members } = topic;
@@ -153,7 +153,7 @@ export const addStudentToTopic = async (
       members: [...members, studentId],
     });
     // remove student from applied list
-    const q = query(userRef, where('uid', '==', studentId));
+    const q = query(userRef, where("uid", "==", studentId));
     const snapshot = await getDocs(q);
     const studentRef = snapshot.docs[0].ref;
     batch.update(studentRef, {
@@ -168,7 +168,7 @@ export const addTopicToAppliedTopics = async (
   studentId: string,
   topicId: string
 ) => {
-  const q = query(userRef, where('uid', '==', studentId));
+  const q = query(userRef, where("uid", "==", studentId));
   const snapshot = await getDocs(q);
   const studentRef = snapshot.docs[0].ref;
 
@@ -185,7 +185,7 @@ export const removeStudentFromTopic = async (
   topicId: string,
   studentId: string
 ) => {
-  const topicRef = doc(periodRef, periodId, 'topics', topicId);
+  const topicRef = doc(periodRef, periodId, "topics", topicId);
   const topic = await getTopic(topicRef);
   if (topic) {
     const { members } = topic;
@@ -196,7 +196,7 @@ export const removeStudentFromTopic = async (
 };
 
 export const getUser = async (userId: string) => {
-  const q = query(userRef, where('uid', '==', userId));
+  const q = query(userRef, where("uid", "==", userId));
   const snapshot = await getDocs(q);
   const user = snapshot.docs[0];
   if (user && user.exists()) {
@@ -230,7 +230,7 @@ export const addBookmarks = async (
   topicId: string
 ) => {
   //updatedoc student bookmarks map
-  const q = query(userRef, where('uid', '==', studentId));
+  const q = query(userRef, where("uid", "==", studentId));
   const snapshot = await getDocs(q);
   const studentRef = snapshot.docs[0].ref;
   const student = snapshot.docs[0].data();
@@ -253,7 +253,7 @@ export const removeBookmarks = async (
   topicId: string
 ) => {
   //updatedoc student bookmarks map
-  const q = query(userRef, where('uid', '==', studentId));
+  const q = query(userRef, where("uid", "==", studentId));
   const snapshot = await getDocs(q);
   const studentRef = snapshot.docs[0].ref;
   const student = snapshot.docs[0].data();
@@ -267,7 +267,7 @@ export const removeBookmarks = async (
 
 export async function getStudentListAppliedToTopic(topicId: string) {
   console.log(topicId);
-  const q = query(userRef, where('appliedTopics', 'array-contains', topicId));
+  const q = query(userRef, where("appliedTopics", "array-contains", topicId));
   const snapshot = await getDocs(q);
   const students: Student[] = [];
   snapshot.forEach((doc) => {
@@ -277,7 +277,7 @@ export async function getStudentListAppliedToTopic(topicId: string) {
       ...rest,
     } as Student);
   });
-  console.log('students', students);
+  console.log("students", students);
   return students;
 }
 
@@ -285,7 +285,7 @@ export async function onStudentListAppliedToTopicChange(
   topicId: string,
   callback: (students: Student[]) => void
 ) {
-  const q = query(userRef, where('appliedTopics', 'array-contains', topicId));
+  const q = query(userRef, where("appliedTopics", "array-contains", topicId));
   const unsubscribe = onSnapshot(q, () => {
     getStudentListAppliedToTopic(topicId).then((students) => {
       callback(students);
@@ -302,7 +302,7 @@ export const createPeriod = async (period: Period) => {
   const end = Timestamp.fromDate(new Date(endDate));
   console.log(start, end);
 
-  const periodRef = doc(collection(db, 'periods'));
+  const periodRef = doc(collection(db, "periods"));
   setDoc(periodRef, {
     ...rest,
     startDate: start,
@@ -314,14 +314,14 @@ export const checkIfStudentJoinedAnyTopic = (
   studentId: string,
   callback: (topicId: string | null) => void
 ) => {
-  const q = query(topicRef, where('members', 'array-contains', studentId));
+  const q = query(topicRef, where("members", "array-contains", studentId));
   const unsubscribe = onSnapshot(q, (snapshot) => {
     if (snapshot.docs.length > 0) {
       const topicId = snapshot.docs[0].id;
-      console.log('student joined topic', topicId);
+      console.log("student joined topic", topicId);
       callback(topicId);
     } else {
-      console.log('student not joined any topic');
+      console.log("student not joined any topic");
       callback(null);
     }
   });
@@ -355,15 +355,15 @@ export const setEvaluationMembers = async (
   topicId: string,
   members: string[]
 ) => {
-  console.log('setEvaluationMembers', periodId, topicId, members);
-  const topicRef = doc(periodRef, periodId, 'topics', topicId);
+  console.log("setEvaluationMembers", periodId, topicId, members);
+  const topicRef = doc(periodRef, periodId, "topics", topicId);
   // check if topic exists
   const topic = await getTopic(topicRef);
-  console.log('topic', topic);
+  console.log("topic", topic);
   if (topic) {
     updateDoc(topicRef, { evaluationMembers: members });
   } else {
-    console.log('topic does not exist', periodId, topicId);
+    console.log("topic does not exist", periodId, topicId);
   }
 };
 
