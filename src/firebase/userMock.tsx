@@ -1,7 +1,12 @@
-import Specialization from '../utils/types/Specialization'
-import { Admin, Educator, Student, HeadOfDepartment } from '../utils/types/User'
+import Specialization from '../utils/types/Specialization';
+import {
+  Admin,
+  Educator,
+  Student,
+  HeadOfDepartment,
+} from '../utils/types/User';
 
-import UserRole from '../utils/types/UserRole'
+import UserRole from '../utils/types/UserRole';
 
 export const admin: Admin = {
   id: '1',

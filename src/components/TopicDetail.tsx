@@ -27,20 +27,42 @@ import useCheckActiveTopic from "../hooks/useCheckActiveTopic";
 import useConfirmPopup from "../hooks/useConfirmPopup";
 import ConfirmationPopup from "./ConfirmationPopup";
 import WithOverlay from "./WithOverlay";
-import BookmarkButton from "../loc - day 3 - sprint 2/BookmarkButton";
+import BookmarkButton from "./BookmarkButton";
 import AppliedStudentList from "./AppliedStudentList";
 import NormalModal from "./NormalModal";
 import CheckVisible from "./CheckVisible";
 import SelectEvaluationMember from "./SelectEvaluationMember";
+import {
+  errorNotificationCreator,
+  successNotificationCreator,
+} from "../utils/functions/notificationUtil";
+import { useNotification } from "../hooks/useNotification";
 
 function TopicDetail() {
   const applyTopic = useConfirmPopup(() => {
     if (!userId) return;
-    addTopicToAppliedTopics(userId, topicId);
+    try {
+      addTopicToAppliedTopics(userId, topicId);
+      showNotification(
+        successNotificationCreator("Đã gửi yêu cầu tham gia đề tài thành công")
+      );
+    } catch (e) {
+      showNotification(
+        errorNotificationCreator("Đã có lỗi xảy ra, vui lòng thử lại sau")
+      );
+    }
   });
+  const showNotification = useNotification();
   const deleteTopic = useConfirmPopup(() => {
-    removeTopic(periodId, topicId);
-    dispatch(closeTopicDetail());
+    try {
+      removeTopic(periodId, topicId);
+      dispatch(closeTopicDetail());
+      showNotification(successNotificationCreator("Đã xóa đề tài thành công"));
+    } catch (e) {
+      showNotification(
+        errorNotificationCreator("Đã có lỗi xảy ra, vui lòng thử lại sau")
+      );
+    }
   });
   const addEvaluation = useConfirmPopup(() => {
     console.log("addEvaluation");

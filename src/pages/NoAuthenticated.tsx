@@ -1,7 +1,6 @@
-import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import useCheckLogin from '../hooks/useCheckLogin'
-
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import useCheckLogin from '../hooks/useCheckLogin';
 
 function NoAuthenticated() {
   const navigate = useNavigate();

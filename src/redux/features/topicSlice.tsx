@@ -1,5 +1,3 @@
-// * Loc day 6
-
 import {
   createSlice,
   createAsyncThunk,

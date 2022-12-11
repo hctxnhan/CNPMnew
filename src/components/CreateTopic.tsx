@@ -1,35 +1,42 @@
-import { useForm, Controller } from 'react-hook-form'
-import { createTopic } from '../firebase/firestore'
-import { selectActivePeriod, selectPeriods } from '../redux/features/topicSlice'
-import { selectUser, selectUserId } from '../redux/features/userSlice'
-import { useAppSelector } from '../redux/store'
-import Topic from '../utils/types/Topic'
-import { Educator } from '../utils/types/User'
-import Button from './Button'
-import Input from './Input'
-import SelectInput from './SelectInput'
-
-import TagInputComponent from './TagInputComponent'
+import { useForm, Controller } from "react-hook-form";
+import { createTopic } from "../firebase/firestore";
+import {
+  selectActivePeriod,
+  selectPeriods,
+} from "../redux/features/topicSlice";
+import { selectUser, selectUserId } from "../redux/features/userSlice";
+import { useAppSelector } from "../redux/store";
+import Topic from "../utils/types/Topic";
+import { Educator } from "../utils/types/User";
+import Button from "./Button";
+import Input from "./Input";
+import SelectInput from "./SelectInput";
+import {
+  errorNotificationCreator,
+  successNotificationCreator,
+} from "../utils/functions/notificationUtil";
+import TagInputComponent from "./TagInputComponent";
+import { useNotification } from "../hooks/useNotification";
 
 type TopicData = {
-  name: string
-  description: string
-  outcome: string[]
-  periodId: string
-  numberOfStudent: number
-}
+  name: string;
+  description: string;
+  outcome: string[];
+  periodId: string;
+  numberOfStudent: number;
+};
 
 const defaultValues: TopicData = {
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   outcome: [],
-  periodId: '',
+  periodId: "",
   numberOfStudent: 3,
-}
+};
 
 type CreateTopicProps = {
-  onClose: () => void
-}
+  onClose: () => void;
+};
 
 function CreateTopic({ onClose }: CreateTopicProps) {
   const {
@@ -40,21 +47,23 @@ function CreateTopic({ onClose }: CreateTopicProps) {
     formState: { errors },
   } = useForm<TopicData>({
     defaultValues,
-  })
+  });
 
-  const periods = useAppSelector(selectActivePeriod)
+  const showNotification = useNotification();
+
+  const periods = useAppSelector(selectActivePeriod);
 
   const allPeriods = periods.map((period) => ({
     value: period.id,
     label: period.name,
-  }))
+  }));
 
-  const user = useAppSelector(selectUser)
+  const user = useAppSelector(selectUser);
 
-  function onSubmit(data: TopicData) {
+  async function onSubmit(data: TopicData) {
     if (user) {
-      const educator = user as Educator
-      const { name, description, outcome, periodId, numberOfStudent } = data
+      const educator = user as Educator;
+      const { name, description, outcome, periodId, numberOfStudent } = data;
 
       const topic: Topic = {
         name,
@@ -65,18 +74,23 @@ function CreateTopic({ onClose }: CreateTopicProps) {
         members: [],
         specialization: educator.specialization,
         educatorId: educator.id,
-        id: '',
+        id: "",
+      };
+
+      try {
+        await createTopic(periodId, topic);
+        showNotification(successNotificationCreator("Tạo đề tài thành công"));
+        reset();
+        onClose();
+      } catch (error) {
+        showNotification(errorNotificationCreator("Tạo đề tài thất bại"));
       }
-
-      createTopic(periodId, topic)
-
-      reset()
     }
   }
 
   return (
-    <div className='fixed w-[500px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 pt-8 pb-4 rounded-lg shadow-lg'>
-      <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3'>
+    <div className="fixed w-[500px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 pt-8 pb-4 rounded-lg shadow-lg">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         {/* <input
           className='w-full p-2 border border-gray-300 rounded-lg focus:ring focus:outline-none'
           type='text'
@@ -89,17 +103,17 @@ function CreateTopic({ onClose }: CreateTopicProps) {
         */}
 
         <Controller
-          name='name'
+          name="name"
           control={control}
           rules={{
             required: true,
             maxLength: 80,
           }}
-          render={({ field }) => <Input {...field} placeholder='Tên đề tài' />}
+          render={({ field }) => <Input {...field} placeholder="Tên đề tài" />}
         />
 
         <Controller
-          name='description'
+          name="description"
           control={control}
           rules={{
             required: true,
@@ -109,15 +123,15 @@ function CreateTopic({ onClose }: CreateTopicProps) {
             <Input
               {...field}
               error={errors.description && errors.description.message}
-              placeholder='Mô tả'
+              placeholder="Mô tả"
             />
           )}
         />
 
-        <div className='grid grid-cols-3 gap-2'>
-          <div className='col-span-2'>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="col-span-2">
             <Controller
-              name='periodId'
+              name="periodId"
               control={control}
               render={({ field: { onChange } }) => (
                 <SelectInput options={allPeriods} onChange={onChange} />
@@ -126,7 +140,7 @@ function CreateTopic({ onClose }: CreateTopicProps) {
           </div>
 
           <Controller
-            name='numberOfStudent'
+            name="numberOfStudent"
             control={control}
             rules={{
               required: true,
@@ -137,29 +151,29 @@ function CreateTopic({ onClose }: CreateTopicProps) {
               <Input
                 {...field}
                 error={errors.name && errors.name.message}
-                placeholder='Số lượng sinh viên tối đa'
+                placeholder="Số lượng sinh viên tối đa"
               />
             )}
           />
         </div>
 
         <Controller
-          name='outcome'
+          name="outcome"
           control={control}
           render={({ field: { value, onChange } }) => (
             <TagInputComponent value={value} onChange={onChange} />
           )}
         />
 
-        <div className='flex justify-end gap-2'>
-          <Button buttonType='info' onClick={onClose}>
+        <div className="flex justify-end gap-2">
+          <Button buttonType="info" onClick={onClose}>
             Hủy
           </Button>
           <Button
-            type='submit'
-            buttonType='primary'
+            type="submit"
+            buttonType="primary"
             onClick={(e) => {
-              handleSubmit(onSubmit)
+              handleSubmit(onSubmit);
             }}
           >
             Thêm đề tài
@@ -167,7 +181,7 @@ function CreateTopic({ onClose }: CreateTopicProps) {
         </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default CreateTopic
+export default CreateTopic;

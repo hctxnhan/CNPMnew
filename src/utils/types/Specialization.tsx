@@ -1,4 +1,3 @@
-
 enum Specialization {
   SOFTWARE_ENGINEER = 'Công nghệ phần mềm',
   INFORMATION_TECHNOLOGY = 'Hệ thống thông tin',

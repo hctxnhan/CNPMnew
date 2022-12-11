@@ -1,14 +1,19 @@
-import { Educator } from '../utils/types/User';
+import { Educator } from "../utils/types/User";
 
-import { useEffect, useState } from 'react';
-import TeacherList from './TeacherList';
-import { useAppSelector } from '../redux/store';
-import { selectEducators } from '../redux/features/educatorSlice';
-import CheckVisible from './CheckVisible';
-import UserRole from '../utils/types/UserRole';
-import Button from './Button';
-import { setEvaluationMembers } from '../firebase/firestore';
-import { selectTopicById } from '../redux/features/topicSlice';
+import { useEffect, useState } from "react";
+import TeacherList from "./TeacherList";
+import { useAppSelector } from "../redux/store";
+import { selectEducators } from "../redux/features/educatorSlice";
+import CheckVisible from "./CheckVisible";
+import UserRole from "../utils/types/UserRole";
+import Button from "./Button";
+import { setEvaluationMembers } from "../firebase/firestore";
+import { selectTopicById } from "../redux/features/topicSlice";
+import { useNotification } from "../hooks/useNotification";
+import {
+  errorNotificationCreator,
+  successNotificationCreator,
+} from "../utils/functions/notificationUtil";
 
 type SelectEvaluationMemberProps = {
   numberOfMembers?: number;
@@ -21,6 +26,7 @@ function SelectEvaluationMember({
   topicId,
   periodId,
 }: SelectEvaluationMemberProps) {
+  const showNotification = useNotification();
   const [member, setMember] = useState<Educator[]>([]);
 
   const allTeachers = useAppSelector(selectEducators);
@@ -60,21 +66,29 @@ function SelectEvaluationMember({
 
   function handleSave() {
     const members = member.map((m) => m.id);
-
-    setEvaluationMembers(periodId, topicId, members);
+    try {
+      setEvaluationMembers(periodId, topicId, members);
+      showNotification(
+        successNotificationCreator("Lưu thành công hội đồng đánh giá!")
+      );
+    } catch (error) {
+      showNotification(
+        errorNotificationCreator("Lưu thất bại! Đã có lỗi xảy ra!")
+      );
+    }
   }
 
   const emptyEvaluationMember = (
-    <div className='text-center'>
-      <div className='text-gray-500 text-xl'>Chưa có giáo viên nào!</div>
+    <div className="text-center">
+      <div className="text-gray-500 text-xl">Chưa có giáo viên nào!</div>
     </div>
   );
 
   return (
     <div>
-      <div className='grid grid-cols-2 gap-2 relative'>
+      <div className="grid grid-cols-2 gap-2 relative">
         <div>
-          <h1 className='text-center uppercase text-gray-500 text-xs font-semibold tracking-tight mb-2'>
+          <h1 className="text-center uppercase text-gray-500 text-xs font-semibold tracking-tight mb-2">
             Hội đồng (tối đa {numberOfMembers} người)
           </h1>
           <CheckVisible
@@ -88,17 +102,17 @@ function SelectEvaluationMember({
             allowedRoles={[UserRole.HEAD_OF_DEPARTMENT]}
             rules={member.length > 0}
           >
-            <div className='max-h-[400px] overflow-y-scroll pr-1'>
+            <div className="max-h-[400px] overflow-y-scroll pr-1">
               <TeacherList teachers={member} onRemove={removeMember} />
             </div>
           </CheckVisible>
         </div>
         <div>
-          <p className='text-center uppercase text-gray-500 text-xs font-semibold tracking-tight mb-2'>
+          <p className="text-center uppercase text-gray-500 text-xs font-semibold tracking-tight mb-2">
             Danh sách giáo viên
           </p>
 
-          <div className='max-h-[400px] overflow-y-scroll pr-1'>
+          <div className="max-h-[400px] overflow-y-scroll pr-1">
             <TeacherList
               teachers={[...notSelectedTeachers]}
               setSelectedTeachers={addMember}
@@ -106,7 +120,7 @@ function SelectEvaluationMember({
           </div>
         </div>
       </div>
-      <div className='text-right mt-3 flex justify-end'>
+      <div className="text-right mt-3 flex justify-end">
         <Button onClick={handleSave}>Phân công</Button>
       </div>
     </div>
