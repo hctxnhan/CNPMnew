@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "firebase": "firebase emulators:start --import=./firebase-export-1668495073581BGQYjD --export-on-exit=./firebase-exports-1668495073581BGQYjD"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
