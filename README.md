@@ -12,10 +12,10 @@
 ## Overview
 * Technical:
 
-        Backend: NodeJs
-        Frontend and Database: Firebase
+        Backend and Database: Firebase Authentication and Firebase Firestore
+        Frontend: ReactJS
 
-* Library: ReactJS adnd Vite 
+* Library: React-Icons and ReduxJS
 * Integrated development environment (IDE) : VSCode
 * Contributors
 
