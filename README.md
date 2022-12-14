@@ -139,7 +139,7 @@ $ cd CNPMnew
 $ npm install
 
 # Run the app Frontend
-$ npm start dev
+$ npm run dev
 
 # Open new terminal Run Backend firebase
 $ npm run firebase
