@@ -1,42 +1,41 @@
 import { GrClose } from "react-icons/gr";
-import { educators, students } from "../firebase/userMock";
-import UserComponent from "./UserComponent";
-import Portal from "./Portal";
+import { HiDocumentRemove } from "react-icons/hi";
+import { addTopicToAppliedTopics, removeTopic } from "../firebase/firestore";
+import useCheckActiveTopic from "../hooks/useCheckActiveTopic";
+import useConfirmPopup from "../hooks/useConfirmPopup";
+import { useNotification } from "../hooks/useNotification";
+import useUserRole from "../hooks/useUserRole";
+import { selectEducatorById } from "../redux/features/educatorSlice";
 import {
+  closeTopicDetail,
   selectTopicId,
   selectTopicOpen,
 } from "../redux/features/topicDetailSlice";
-import { closeTopicDetail } from "../redux/features/topicDetailSlice";
-import { useAppDispatch, useAppSelector } from "../redux/store";
-import Button from "./Button";
-import UserRole from "../utils/types/UserRole";
+import {
+  selectTopicById,
+  selectTopicPeriodId,
+} from "../redux/features/topicSlice";
 import {
   selectUserAppliedTopics,
   selectUserId,
   selectUserJoinedTopic,
 } from "../redux/features/userSlice";
-import useUserRole from "../hooks/useUserRole";
-import { HiDocumentRemove } from "react-icons/hi";
-import {
-  selectTopicById,
-  selectTopicPeriodId,
-} from "../redux/features/topicSlice";
-import { selectEducatorById } from "../redux/features/educatorSlice";
-import { addTopicToAppliedTopics, removeTopic } from "../firebase/firestore";
-import useCheckActiveTopic from "../hooks/useCheckActiveTopic";
-import useConfirmPopup from "../hooks/useConfirmPopup";
-import ConfirmationPopup from "./ConfirmationPopup";
-import WithOverlay from "./WithOverlay";
-import BookmarkButton from "./BookmarkButton";
-import AppliedStudentList from "./AppliedStudentList";
-import NormalModal from "./NormalModal";
-import CheckVisible from "./CheckVisible";
-import SelectEvaluationMember from "./SelectEvaluationMember";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import {
   errorNotificationCreator,
   successNotificationCreator,
 } from "../utils/functions/notificationUtil";
-import { useNotification } from "../hooks/useNotification";
+import UserRole from "../utils/types/UserRole";
+import AppliedStudentList from "./AppliedStudentList";
+import BookmarkButton from "./BookmarkButton";
+import Button from "./Button";
+import CheckVisible from "./CheckVisible";
+import ConfirmationPopup from "./ConfirmationPopup";
+import NormalModal from "./NormalModal";
+import Portal from "./Portal";
+import SelectEvaluationMember from "./SelectEvaluationMember";
+import UserComponent from "./UserComponent";
+import WithOverlay from "./WithOverlay";
 
 function TopicDetail() {
   const applyTopic = useConfirmPopup(() => {

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-test": "vite build",
     "preview": "vite preview",
     "firebase": "firebase emulators:start --import=./firebase-export-1668495073581BGQYjD --export-on-exit=./firebase-exports-1668495073581BGQYjD"
   },

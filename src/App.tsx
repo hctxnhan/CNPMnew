@@ -1,39 +1,35 @@
-import Navbar from "./components/Navbar";
-import FindTopics from "./pages/FindTopics";
-import { Routes, Route } from "react-router-dom";
-import BookmarkedTopics from "./pages/BookmarkedTopics";
+import { Route, Routes } from "react-router-dom";
+
+import { Navbar } from "./components/Navbar";
 import TopicDetail from "./components/TopicDetail";
+import BookmarkedTopics from "./pages/BookmarkedTopics";
 import CreatedTopics from "./pages/CreatedTopics";
+import FindTopics from "./pages/FindTopics";
 
-// import { createUser, createPeriod } from './firebase/firestore';
-import { educators, students, admin } from "./firebase/userMock";
-
+import { Unsubscribe } from "firebase/auth";
 import { useEffect } from "react";
+import CreatePeriod from "./components/CreatePeriod";
+import Footer from "./components/Footer";
+import { NotificationList } from "./components/NotificationList";
+import Portal from "./components/Portal";
+import { onAuthChangeState } from "./firebase/auth";
 import {
   checkIfStudentJoinedAnyTopic,
   onPeriodsChange,
   onUserDataChange,
 } from "./firebase/firestore";
-import { fetchRegistrationPeriods } from "./redux/features/topicSlice";
-import { useAppDispatch, useAppSelector } from "./redux/store";
+import AccountManagement from "./pages/AccountManagement";
+import NoAuthenticated from "./pages/NoAuthenticated";
+import SpecializationTopics from "./pages/SpecializationTopics";
 import { fetchEducators } from "./redux/features/educatorSlice";
-import { onAuthChangeState } from "./firebase/auth";
+import { selectOpenCreatePeriod } from "./redux/features/topicDetailSlice";
+import { fetchRegistrationPeriods } from "./redux/features/topicSlice";
 import {
   selectUserId,
   setJoinedTopic,
   setUser,
 } from "./redux/features/userSlice";
-import NoAuthenticated from "./pages/NoAuthenticated";
-import Portal from "./components/Portal";
-import CreateTopic from "./components/CreateTopic";
-import CreatePeriod from "./components/CreatePeriod";
-import { selectOpenCreatePeriod } from "./redux/features/topicDetailSlice";
-import User from "./utils/types/User";
-import { Unsubscribe } from "firebase/auth";
-import SpecializationTopics from "./pages/SpecializationTopics";
-import AccountManagement from "./pages/AccountManagement";
-import { NotificationList } from "./components/NotificationList";
-import Footer from "./components/Footer";
+import { useAppDispatch, useAppSelector } from "./redux/store";
 
 // educators.forEach((educator) => createUser(educator));
 // students.forEach((student) => {

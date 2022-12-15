@@ -1,26 +1,24 @@
-import { signOut } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
-import { BsBookmarkCheck, BsViewList } from "react-icons/bs";
+import { BsBookmarkCheck, BsCalendarPlus, BsViewList } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { signOutUser } from "../firebase/auth";
+import { useNotification } from "../hooks/useNotification";
+import useUserRole from "../hooks/useUserRole";
+import { openCreatePeriod } from "../redux/features/topicDetailSlice";
 import { selectUser } from "../redux/features/userSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import UserRole from "../utils/types/UserRole";
-import Button from "./Button";
-import LoginPopup from "./LoginPopup";
-import { BsCalendarPlus } from "react-icons/bs";
-import useUserRole from "../hooks/useUserRole";
-import NavbarLink from "./NavbarLink";
-import { openCreatePeriod } from "../redux/features/topicDetailSlice";
-import CheckVisible from "./CheckVisible";
-import { useNotification } from "../hooks/useNotification";
 import {
   errorNotificationCreator,
   successNotificationCreator,
 } from "../utils/functions/notificationUtil";
+import UserRole from "../utils/types/UserRole";
+import Button from "./Button";
+import CheckVisible from "./CheckVisible";
+import LoginPopup from "./LoginPopup";
+import NavbarLink from "./NavbarLink";
 
-function Navbar() {
+export function Navbar() {
   const user = useAppSelector(selectUser);
   const [openLoginPopup, setOpenLoginPopup] = useState(false);
   const dispatch = useAppDispatch();
@@ -171,5 +169,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar;
