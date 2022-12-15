@@ -382,8 +382,13 @@ export async function getAllUsers() {
 
 export function createUserAdditionalData(user: User) {
   // TODO
+  const { id, ...rest } = user;
+  const userToAdd = {
+    ...rest,
+    uid: id,
+  };
   const userDocRef = doc(userRef);
   setDoc(userDocRef, {
-    ...user,
+    ...userToAdd,
   });
 }

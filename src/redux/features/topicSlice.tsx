@@ -2,13 +2,13 @@ import {
   createSlice,
   createAsyncThunk,
   createSelector,
-} from '@reduxjs/toolkit';
-import RegistrationPeriod from '../../utils/types/RegistrationPeriod';
-import { getPeriods } from '../../firebase/firestore';
-import { RootState } from '../store';
-import { PayloadAction } from '@reduxjs/toolkit';
-import Topic from '../../utils/types/Topic';
-import checkIfPeriodActive from '../../utils/functions/CheckIfPeriodACtive';
+} from "@reduxjs/toolkit";
+import RegistrationPeriod from "../../utils/types/RegistrationPeriod";
+import { getPeriods } from "../../firebase/firestore";
+import { RootState } from "../store";
+import { PayloadAction } from "@reduxjs/toolkit";
+import Topic from "../../utils/types/Topic";
+import checkIfPeriodActive from "../../utils/functions/CheckIfPeriodACtive";
 
 type TopicState = {
   periods: RegistrationPeriod[];
@@ -23,7 +23,7 @@ const initialState: TopicState = {
 };
 
 const topicSlice = createSlice({
-  name: 'topic',
+  name: "topic",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -42,7 +42,7 @@ const topicSlice = createSlice({
 });
 
 const fetchRegistrationPeriods = createAsyncThunk(
-  'topic/fetchRegistrationPeriods',
+  "topic/fetchRegistrationPeriods",
   async () => {
     const periods = await getPeriods();
     return periods;
@@ -89,14 +89,14 @@ export const selectActivePeriod = createSelector([selectPeriods], (periods) => {
   const result = periods.filter((period) => {
     return checkIfPeriodActive(period);
   });
-  console.log('result', result);
+  console.log("result", result);
   return result;
 });
 
 export const selectTopicPeriodId = createSelector(
   [selectPeriods, (state: RootState, topicId: string) => topicId],
   (periods, id) => {
-    let periodId = '';
+    let periodId = "";
     periods.forEach((period) => {
       const topics = period.topics.filter((topic) => topic.id === id);
       if (topics.length > 0) {

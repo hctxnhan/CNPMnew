@@ -101,10 +101,12 @@ function App() {
           <Route path="/" element={<FindTopics />} />
           <Route path="/bookmarks" element={<BookmarkedTopics />} />
           <Route path="/my-topics" element={<CreatedTopics />} />
+
           <Route
             path="/specialization-topics"
             element={<SpecializationTopics />}
           />
+
           <Route path="/account-management" element={<AccountManagement />} />
           <Route path="/not-authorised" element={<NoAuthenticated />} />
           <Route path="*" element={<div>404</div>} />

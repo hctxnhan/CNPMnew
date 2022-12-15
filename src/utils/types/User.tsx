@@ -1,5 +1,5 @@
-import Specialization from './Specialization';
-import UserRole from './UserRole';
+import Specialization from "./Specialization";
+import UserRole from "./UserRole";
 
 export interface User {
   id: string;

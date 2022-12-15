@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
-import AccountList from '../components/AccountList';
-import NewTabs from '../components/NewTabs';
-import TabPane from '../components/TabPane';
-import Tabs from '../components/Tabs';
-import { getAllUsers } from '../firebase/firestore';
-import { TabsType } from '../utils/types/Tabs';
-import User from '../utils/types/User';
-import UserRole from '../utils/types/UserRole';
-import { BiUserPlus } from 'react-icons/bi';
-import Button from '../components/Button';
-import CreateAccount from '../components/CreateAccount';
-import Portal from '../components/Portal';
-import useConfirmPopup from '../hooks/useConfirmPopup';
-import WithOverlay from '../components/WithOverlay';
-import CheckVisible from '../components/CheckVisible';
-import NormalModal from '../components/NormalModal';
+import { useEffect, useState } from "react";
+import AccountList from "../components/AccountList";
+import NewTabs from "../components/NewTabs";
+import TabPane from "../components/TabPane";
+import Tabs from "../components/Tabs";
+import { getAllUsers } from "../firebase/firestore";
+import { TabsType } from "../utils/types/Tabs";
+import User from "../utils/types/User";
+import UserRole from "../utils/types/UserRole";
+import { BiUserPlus } from "react-icons/bi";
+import Button from "../components/Button";
+import CreateAccount from "../components/CreateAccount";
+import Portal from "../components/Portal";
+import useConfirmPopup from "../hooks/useConfirmPopup";
+import WithOverlay from "../components/WithOverlay";
+import CheckVisible from "../components/CheckVisible";
+import NormalModal from "../components/NormalModal";
 
 function AccountManagement() {
   const [users, setUsers] = useState<User[]>([]);
@@ -48,27 +48,27 @@ function AccountManagement() {
 
   return (
     <div>
-      {/* <Portal wrapperId='popup'>
+      <Portal wrapperId="popup">
         <CheckVisible
           allowedRoles={[UserRole.ADMIN]}
           rules={creatingAccount.isOpen}
         >
           <WithOverlay>
             <NormalModal
-              title='Tạo tài khoản mới'
+              title="Tạo tài khoản mới"
               onClose={creatingAccount.onCancel}
             >
               <CreateAccount />
             </NormalModal>
           </WithOverlay>
         </CheckVisible>
-      </Portal> */}
-      {/* <div className='flex justify-end mb-2'>
+      </Portal>
+      <div className="flex justify-end mb-2">
         <Button onClick={creatingAccount.open}>
-          <BiUserPlus className='mr-1' size={25} />
+          <BiUserPlus className="mr-1" size={25} />
           <p>Tạo người dùng mới</p>
         </Button>
-      </div> */}
+      </div>
       <NewTabs tabs={tabs} />
     </div>
   );

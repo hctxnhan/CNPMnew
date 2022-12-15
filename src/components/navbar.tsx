@@ -45,7 +45,7 @@ function Navbar() {
   }, []);
 
   return (
-    <nav className="flex justify-between py-4 px-8">
+    <nav className="flex justify-between py-2 px-8 bg-white mb-2">
       <div className="flex items-center gap-5">
         <img
           className="w-[60px] object-cover object-center"

@@ -20,32 +20,8 @@ export function signOutUser() {
   signOut(auth);
 }
 
-export async function createUser(
-  email: string,
-  password: string = "12345678",
-  user: User
-) {
-  // TODO
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-
-  if (userCredential) {
-    updateProfile(userCredential.user, {
-      displayName: user.name,
-    });
-
-    const userData: User = {
-      ...user,
-      id: userCredential.user.uid,
-    };
-
-    console.log(userData);
-
-    createUserAdditionalData(userData);
-  }
+export async function createUser(user: User) {
+  createUserAdditionalData(user);
 }
 
 export function onAuthChangeState(callback: (user: User | null) => void) {
