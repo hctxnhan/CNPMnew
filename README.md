@@ -2,20 +2,17 @@
 [![My Skills](https://skillicons.dev/icons?i=react,nodejs,ts,vite,firebase&perline=5)](https://skillicons.dev)
 
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/hctxnhan/CNPMnew) 
-
 ![GitHub contributors](https://img.shields.io/github/contributors/hctxnhan/CNPMnew) 
-
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/hctxnhan/CNPMnew) 
-
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/hctxnhan/CNPMnew)
 
 ## Overview
 * Technical:
 
-        Backend: NodeJs
-        Frontend and Database: Firebase
+        Backend and Database: Firebase Authentication and Firebase Firestore
+        Frontend: ReactJS
 
-* Library: ReactJS adnd Vite 
+* Library: React-Icons and ReduxJS
 * Integrated development environment (IDE) : VSCode
 * Contributors
 
@@ -142,7 +139,7 @@ $ cd CNPMnew
 $ npm install
 
 # Run the app Frontend
-$ npm start dev
+$ npm run dev
 
 # Open new terminal Run Backend firebase
 $ npm run firebase
@@ -151,3 +148,9 @@ $ npm run firebase
 
 > **Note**
 > If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
+
+## Account for testing functionality (Password for all account: 12345678)
+* Admin: admin@gmail.com
+* Head of Department: nguyencongdoan_tbm@gmail.com
+* Teacher: nguyenvana@gmail.com
+* Student: hoangvana@gmail.com
